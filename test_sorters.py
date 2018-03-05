@@ -1,4 +1,5 @@
 import logging
+import random
 import sys
 
 import pytest
@@ -8,8 +9,12 @@ logging.getLogger(__name__)
 
 import core
 
+
+TEST_COUNT = 5
+
 test_cases = [
-    [86, 59, 64, 0, 36, 5, 67, 66, 42, 71, 76, 73, 50, 97, 78, 23, 45, 55, 20, 41],
+    random.sample(range(100), random.randint(10, 30))
+    for x in xrange(TEST_COUNT)
 ]
 
 @pytest.mark.parametrize('sorter',
