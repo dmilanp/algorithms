@@ -23,6 +23,7 @@ test_cases = [
         (sorting.QuickSort),
         (sorting.InsertionSort),
         (sorting.MergeSort),
+        (sorting.SelectionSort),
     ]
 )
 def test_simple(sorter):
