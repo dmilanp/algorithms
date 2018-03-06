@@ -1,4 +1,4 @@
-from core.base_sort import BaseSort
+from core.sorting.base_sort import BaseSort
 
 
 class MergeSort(BaseSort):

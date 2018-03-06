@@ -7,8 +7,7 @@ import pytest
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
 
-import core
-
+from core import sorting
 
 TEST_COUNT = 5
 
@@ -20,10 +19,10 @@ test_cases = [
 @pytest.mark.parametrize(
     'sorter',
     [
-        (core.BubbleSort),
-        (core.QuickSort),
-        (core.InsertionSort),
-        (core.MergeSort),
+        (sorting.BubbleSort),
+        (sorting.QuickSort),
+        (sorting.InsertionSort),
+        (sorting.MergeSort),
     ]
 )
 def test_simple(sorter):

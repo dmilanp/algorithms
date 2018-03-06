@@ -1,6 +1,6 @@
 import logging
 
-from core.base_sort import BaseSort
+from core.sorting.base_sort import BaseSort
 
 log = logging.getLogger(__name__)
 
