@@ -17,11 +17,13 @@ test_cases = [
     for x in xrange(TEST_COUNT)
 ]
 
-@pytest.mark.parametrize('sorter',
+@pytest.mark.parametrize(
+    'sorter',
     [
         (core.BubbleSort),
         (core.QuickSort),
         (core.InsertionSort),
+        (core.MergeSort),
     ]
 )
 def test_simple(sorter):
