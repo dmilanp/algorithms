@@ -6,6 +6,7 @@ log = logging.getLogger(__name__)
 
 
 class QuickSort(BaseSort):
+
     def __init__(self, partition_method=None):
         super(QuickSort, self).__init__()
         self.partition = partition_method or self.hoare_partition

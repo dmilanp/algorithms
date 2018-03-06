@@ -20,7 +20,8 @@ test_cases = [
 @pytest.mark.parametrize('sorter',
     [
         (core.BubbleSort),
-        (core.QuickSort)
+        (core.QuickSort),
+        (core.InsertionSort),
     ]
 )
 def test_simple(sorter):
