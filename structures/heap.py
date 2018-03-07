@@ -1,3 +1,9 @@
+import logging
+import sys
+
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.getLogger(__name__)
 
 
 def max_heap(parent, child):
@@ -20,7 +26,15 @@ class Heap(object):
         assert heap_property in [max_heap, min_heap]
         self.heap = from_values
         self.heap_property = heap_property
-        self.check_heap_property()
+
+        try:
+            self.check_heap_property()
+        except AssertionError:
+            logging.warning(
+                'Provided values do not hold {} property. Correcting heap...'.format(self.heap_property.__name__)
+            )
+            self.correct_heap()
+            logging.info('New heap is {}'.format(self.heap))
 
     def check_heap_property(self):
         for i in xrange(len(self.heap)):
@@ -91,3 +105,10 @@ class Heap(object):
 
     def get_child_indices(self, index):
         return index*2+1, index*2+2
+
+    def correct_heap(self):
+        old_heap = list(self.heap)
+        self.heap = []
+
+        for item in old_heap:
+            self.insert(item)
