@@ -25,10 +25,9 @@ class Heap(object):
     def check_heap_property(self):
         for i in xrange(len(self.heap)):
             for child in filter(lambda index: index < len(self.heap), [2*i+1, 2*i+2]):
-                assert self.heap_property(
-                    parent=self.heap[i], child=self.heap[child]
-                ), 'Parent at {} (value={}) and child at {} (value={}) violate the {} property'.format(
-                    i, self.heap[i], child, self.heap[child], self.heap_property.__name__
+                assert self.heap_property(parent=self.heap[i], child=self.heap[child]), \
+                'Parent at {} (value={}) and child at {} (value={}) violate the {} property'.format(
+                    i, self.heap[i], child, self.heap[child], self.heap_property.__name__,
                 )
 
     def insert(self, value):
@@ -47,8 +46,8 @@ class Heap(object):
     def _remove_strategy(self):
         """
         When removing the root element, we replace it with the last one and bubble it down.
-        In max_heap case we replace it with the minimum of the children, whereas in case of min_heap we replace
-        it with the maximum.
+        In max_heap case we replace it with the maximum of the children, whereas in case of min_heap we replace
+        it with the minimum.
         """
         if self.heap_property == max_heap:
             return max
