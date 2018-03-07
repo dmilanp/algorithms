@@ -24,6 +24,7 @@ test_cases = [
         (sorting.InsertionSort),
         (sorting.MergeSort),
         (sorting.SelectionSort),
+        (sorting.HeapSort),
     ]
 )
 def test_simple(sorter):

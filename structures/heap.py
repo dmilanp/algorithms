@@ -69,12 +69,13 @@ class Heap(object):
             return min
 
     def remove_root(self):
-        if len(self.heap) <= 1:
-            self.heap = []
+        if len(self.heap) == 0:
             return
+        elif len(self.heap) == 1:
+            return self.heap.pop()
 
         swap_items(self.heap, 0, len(self.heap) - 1)
-        self.heap.pop(len(self.heap) - 1)
+        root = self.heap.pop(len(self.heap) - 1)
         cmp_fn = self._remove_strategy()
 
         moved_item_index = 0
@@ -91,6 +92,8 @@ class Heap(object):
             swap_items(self.heap, moved_item_index, next_candidate_index)
             moved_item_index = next_candidate_index
             children = [index for index in self.get_child_indices(moved_item_index) if index < len(self.heap)]
+
+        return root
 
     def get_parent_index(self, child_index):
         assert child_index >= 0, 'Child index cannot be negative'
