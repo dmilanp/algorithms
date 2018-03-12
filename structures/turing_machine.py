@@ -41,6 +41,7 @@ class TuringMachine(object):
     @staticmethod
     def _displacement_for_direction(move):
         assert move in [L, R]
+
         if move == L:
             return -1
         else:
@@ -58,13 +59,14 @@ class TuringMachine(object):
                 exit(0)
 
             self.tape[self.at_index] = instruction.write
+
             if instruction.move == H:
                 logging.debug('Reached halting state. Halting...')
                 break
 
             logging.debug('Writing {} and moving {}'.format(instruction.write, instruction.move))
-
             displacement = self._displacement_for_direction(instruction.move)
+
             if self.at_index == 0 and displacement == -1:
                 self.tape.insert(0, B)
                 # No need to move
@@ -81,12 +83,16 @@ class TuringMachine(object):
 
 class MultiplyingTuringMachine(TuringMachine):
     def __init__(self, a, b):
+        assert isinstance(a, int) and isinstance(b, int)
+
+        logging.info('Multiplying {} times {}'.format(a, b))
         a_list = ['1'] * a
         b_list = ['1'] * b
         tape = ['#'] + a_list + ['*'] + b_list + ['=']
-        super(MultiplyingTuringMachine, self).__init__(tape=tape)
-        self.state = 's0'
 
+        super(MultiplyingTuringMachine, self).__init__(tape=tape)
+
+        self.state = 's0'
         self.add_rule(state='s0', read='#', write='#', move=R, new_state='s0')
         self.add_rule(state='s0', read='1', write='b', move=R, new_state='s1')
         self.add_rule(state='s1', read='1', write='1', move=R, new_state='s1')
