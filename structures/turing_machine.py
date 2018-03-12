@@ -62,7 +62,7 @@ class TuringMachine(object):
                 logging.debug('Reached halting state. Halting...')
                 break
 
-            logging.info('Writing {} and moving {}'.format(instruction.write, instruction.move))
+            logging.debug('Writing {} and moving {}'.format(instruction.write, instruction.move))
 
             displacement = self._displacement_for_direction(instruction.move)
             if self.at_index == 0 and displacement == -1:
@@ -70,16 +70,40 @@ class TuringMachine(object):
                 # No need to move
             else:
                 self.at_index += displacement
+
+            if self.at_index >= len(self.tape):
+                self.tape.append(B)
+
             self.state = instruction.new_state
+
+        print self.tape
 
 
 class MultiplyingTuringMachine(TuringMachine):
     def __init__(self, a, b):
-        a_list = [1] * a
-        b_list = [1] * b
-        tape = [B] + a_list + ['*'] + b_list + ['=']
+        a_list = ['1'] * a
+        b_list = ['1'] * b
+        tape = ['#'] + a_list + ['*'] + b_list + ['=']
         super(MultiplyingTuringMachine, self).__init__(tape=tape)
+        self.state = 's0'
 
-    def run(self):
-        raise NotImplementedError('No rules to multiply numbers yet')
-
+        self.add_rule(state='s0', read='#', write='#', move=R, new_state='s0')
+        self.add_rule(state='s0', read='1', write='b', move=R, new_state='s1')
+        self.add_rule(state='s1', read='1', write='1', move=R, new_state='s1')
+        self.add_rule(state='s1', read='*', write='*', move=R, new_state='s2')
+        self.add_rule(state='s2', read='1', write='t', move=R, new_state='s3')
+        self.add_rule(state='s3', read='1', write='1', move=R, new_state='s3')
+        self.add_rule(state='s3', read='=', write='=', move=R, new_state='s4')
+        self.add_rule(state='s4', read='1', write='1', move=R, new_state='s4')
+        self.add_rule(state='s4', read=B, write='1', move=L, new_state='s5')
+        self.add_rule(state='s5', read='1', write='1', move=L, new_state='s5')
+        self.add_rule(state='s5', read='=', write='=', move=L, new_state='s6')
+        self.add_rule(state='s6', read='1', write='1', move=L, new_state='s7')
+        self.add_rule(state='s6', read='t', write='1', move=L, new_state='s6')
+        self.add_rule(state='s6', read='*', write='*', move=L, new_state='s8')
+        self.add_rule(state='s7', read='1', write='1', move=L, new_state='s7')
+        self.add_rule(state='s7', read='t', write='t', move=R, new_state='s2')
+        self.add_rule(state='s8', read='b', write='b', move=H, new_state='s8')
+        self.add_rule(state='s8', read='1', write='1', move=L, new_state='s9')
+        self.add_rule(state='s9', read='b', write='b', move=R, new_state='s0')
+        self.add_rule(state='s9', read='1', write='1', move=L, new_state='s9')
