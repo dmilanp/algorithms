@@ -71,3 +71,15 @@ class TuringMachine(object):
             else:
                 self.at_index += displacement
             self.state = instruction.new_state
+
+
+class MultiplyingTuringMachine(TuringMachine):
+    def __init__(self, a, b):
+        a_list = [1] * a
+        b_list = [1] * b
+        tape = [B] + a_list + ['*'] + b_list + ['=']
+        super(MultiplyingTuringMachine, self).__init__(tape=tape)
+
+    def run(self):
+        raise NotImplementedError('No rules to multiply numbers yet')
+
