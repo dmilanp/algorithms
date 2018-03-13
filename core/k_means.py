@@ -1,38 +1,45 @@
-from __future__ import absolute_import, unicode_literals
-
 import numpy as np
 import pandas as pd
+import matplotlib as mpl
+
+mpl.use('TkAgg')
+
+import matplotlib.pyplot as plt
 
 
 class KMeans(object):
 
-    def __init__(self, from_df=None, dimension=2, initial_count=50):
+    def __init__(self, from_df=None, dimension=2, initial_count=100):
         super(KMeans, self).__init__()
         self.dimension = dimension
-        self.initial_point_count = initial_count
-        self.points = pd.DataFrame()
+        self.points = from_df or pd.DataFrame()
 
         if not from_df:
-            self.append_random_points(initial_count)
+            self.add_random_points(initial_count)
 
-    def append_random_points(self, point_count):
-        for i in xrange(point_count):
-            self.points = self.points.assign(**{str(i):self.random_point_of_dimension(dimension=self.dimension)})
+    def add_random_points(self, count):
+        for i in xrange(count):
+            self.points = self.points.append(
+                self.random_point_of_dimension(dimension=self.dimension),
+                ignore_index=True
+            )
 
-    def append_points(self, points):
-        for point in points:
-            self._assert_point_dimension(point)
-            self.points.append(point)
+    def feed_points(self, df):
+        raise NotImplementedError
 
     @staticmethod
     def random_point_of_dimension(dimension):
-        # Not very random for now
-        return np.random.randn(dimension)
+        return pd.DataFrame(np.random.randn(1, dimension))
 
-    def _assert_point_dimension(self, point):
-        assert len(point) == self.dimension
+    @property
+    def point_count(self):
+        return len(self.points)
 
+    def plot_points(self):
+        self.points.plot(x=0, y=1, linestyle="", marker="o")
+        plt.show()
 
 if __name__ == '__main__':
     a = KMeans()
-    print a.points
+    print '{} has {} points'.format(a, a.point_count)
+    a.plot_points()
