@@ -1,10 +1,11 @@
 import logging
-import random
 import sys
 
-import numpy as np
-import pandas as pd
 import matplotlib as mpl
+import pandas as pd
+
+from utils.pandas import random_point_of_dimension, random_dataframe_rows
+from utils.misc import point_distance, random_color
 
 mpl.use('TkAgg')
 
@@ -14,35 +15,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
 
 COL_CLUSTER = 'cluster'
-
-
-def point_distance(first, second):
-    return np.linalg.norm(first - second)
-
-
-def random_point_of_dimension(dimension):
-    return pd.DataFrame(np.random.randn(1, dimension))
-
-
-def random_dataframe_rows(df, num):
-    if num > len(df):
-        raise ValueError('Cannot fetch more rows than the size of DataFrame')
-
-    return pd.DataFrame(
-        df.iloc[random.sample(df.index, num)],
-    )
-
-
-def basic_dataframe_plot(df):
-    if len(df.columns)> 2:
-        raise NotImplementedError('Cant project higher dimension points to 2D yet')
-
-    df.plot(x=0, y=1, linestyle="", marker="o", c='b')
-    plt.show()
-
-
-def random_color():
-    return np.random.rand(3,)
 
 
 class KMeans(object):
@@ -135,5 +107,5 @@ class KMeans(object):
         for i in xrange(1, k):
             points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, i)))
             points_in_cluster.plot(ax=plot, x=0, y=1, linestyle="", marker="o", c=random_color())
-            
+
         plt.show()
