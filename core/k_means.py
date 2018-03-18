@@ -37,8 +37,12 @@ def basic_dataframe_plot(df):
     if len(df.columns)> 2:
         raise NotImplementedError('Cant project higher dimension points to 2D yet')
 
-    df.plot(x=0, y=1, linestyle="", marker="o")
+    df.plot(x=0, y=1, linestyle="", marker="o", c='b')
     plt.show()
+
+
+def random_color():
+    return np.random.rand(3,)
 
 
 class KMeans(object):
@@ -63,23 +67,22 @@ class KMeans(object):
 
     def calculate_k_means(self, k):
         assert 1 < k < self.point_count
-        logging.info('Calculating {} means in dimension {}'.format(k, self.dimension))
+        logging.info('Calculating {} means for {} points of dimension {}'.format(k, self.point_count, self.dimension))
 
         # Forgy initialization method
         self.k_means = random_dataframe_rows(self.points, k).drop(COL_CLUSTER, axis=1)
         logging.info('Assigned random k-means from initial points')
-        iteration = 0
 
         while True:
-            iteration += 1
             self._map_points_to_clusters(k)
             maximum_update_step = self._update_means(k)
 
-            logging.info('maximum update step for a mean is {}'.format(maximum_update_step))
+            logging.info('Maximum update step for a mean is {}'.format(maximum_update_step))
             if maximum_update_step < self.THRESHOLD:
                 break
 
         logging.info('Found K means')
+        self._plot_clusters(k)
         return self.k_means
 
     def _map_points_to_clusters(self, k):
@@ -89,12 +92,9 @@ class KMeans(object):
             cluster_index = 0
             distance_to_cluster_mean = point_distance(self.k_means.iloc[cluster_index], point)
 
-            all_distances = [distance_to_cluster_mean]
-
             for cluster_candidate_index in xrange(1, k):
                 # Check to which centroid the point is closest
                 candidate_distance = point_distance(self.k_means.iloc[cluster_candidate_index], point)
-                all_distances.append(candidate_distance)
 
                 if candidate_distance < distance_to_cluster_mean:
                     cluster_index = cluster_candidate_index
@@ -128,10 +128,12 @@ class KMeans(object):
     def point_count(self):
         return len(self.points)
 
+    def _plot_clusters(self, k):
+        points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, 0)))
+        plot = points_in_cluster.plot(x=0, y=1, linestyle="", marker="o", c=random_color())
 
-
-if __name__ == '__main__':
-    a = KMeans(dimension=3)
-    print '{} has {} points'.format(a, a.point_count)
-    a.calculate_k_means(4)
-
+        for i in xrange(1, k):
+            points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, i)))
+            points_in_cluster.plot(ax=plot, x=0, y=1, linestyle="", marker="o", c=random_color())
+            
+        plt.show()
