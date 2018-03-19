@@ -1,15 +1,14 @@
 import logging
 import sys
 
-import matplotlib as mpl
 import pandas as pd
+import matplotlib as mpl
+mpl.use('TkAgg')
+import matplotlib.pyplot as plt
 
-from utils.pandas import random_point_of_dimension, random_dataframe_rows
+from utils.panda_utils import random_point_of_dimension, random_dataframe_rows
 from utils.misc import point_distance, random_color
 
-mpl.use('TkAgg')
-
-import matplotlib.pyplot as plt
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
