@@ -3,11 +3,11 @@ import random
 import sys
 
 import pytest
+from core import sorting
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
 
-from core import sorting
 
 TEST_COUNT = 5
 
@@ -33,5 +33,3 @@ def test_simple(sorter):
     for test_case in test_cases:
         logging.info('Testing {}'.format(test_case))
         assert sorter().sort(test_case) == sorted(test_case)
-
-

@@ -1,5 +1,5 @@
-from structures.heap import Heap, max_heap
 from core.sorting.base_sort import BaseSort
+from structures.heap import Heap, max_heap
 
 
 class HeapSort(BaseSort):

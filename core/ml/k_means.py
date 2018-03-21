@@ -1,19 +1,19 @@
 import logging
 import sys
 
-import pandas as pd
 import matplotlib as mpl
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
+import pandas as pd
 
-from utils.panda_utils import random_point_of_dimension, random_dataframe_rows
 from utils.misc import point_distance, random_color
+from utils.panda_utils import sample_dataframe_rows, random_point_of_dimension
 
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
 
-COL_CLUSTER = 'cluster'
+CLUSTER = 'cluster'
 
 
 class KMeans(object):
@@ -24,7 +24,7 @@ class KMeans(object):
         super(KMeans, self).__init__()
         self.dimension = dimension
         self.points = from_df or pd.DataFrame()
-        self.points[COL_CLUSTER] = None
+        self.points[CLUSTER] = None
 
         if not from_df:
             self.add_random_points(initial_count)
@@ -41,7 +41,7 @@ class KMeans(object):
         logging.info('Calculating {} means for {} points of dimension {}'.format(k, self.point_count, self.dimension))
 
         # Forgy initialization method
-        self.k_means = random_dataframe_rows(self.points, k).drop(COL_CLUSTER, axis=1)
+        self.k_means = sample_dataframe_rows(self.points, k).drop(CLUSTER, axis=1)
         logging.info('Assigned random k-means from initial points')
 
         while True:
@@ -71,13 +71,13 @@ class KMeans(object):
                     cluster_index = cluster_candidate_index
                     distance_to_cluster_mean = candidate_distance
 
-            self.points.loc[point_index, COL_CLUSTER] = cluster_index
+            self.points.loc[point_index, CLUSTER] = cluster_index
 
     def _update_means(self, num_means):
         maximum_step = 0
 
         for i in xrange(num_means):
-            points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, i)))
+            points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(CLUSTER, i)))
             cluster_size = len(points_in_cluster)
             item_wise_sum = points_in_cluster.sum()
 
@@ -100,11 +100,11 @@ class KMeans(object):
         return len(self.points)
 
     def _plot_clusters(self, k):
-        points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, 0)))
+        points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(CLUSTER, 0)))
         plot = points_in_cluster.plot(x=0, y=1, linestyle="", marker="o", c=random_color())
 
         for i in xrange(1, k):
-            points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(COL_CLUSTER, i)))
+            points_in_cluster = pd.DataFrame(self.points.query('{} == {}'.format(CLUSTER, i)))
             points_in_cluster.plot(ax=plot, x=0, y=1, linestyle="", marker="o", c=random_color())
 
         plt.show()

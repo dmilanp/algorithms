@@ -1,8 +1,6 @@
-from collections import defaultdict, namedtuple
-
 import logging
 import sys
-
+from collections import defaultdict, namedtuple
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger(__name__)
